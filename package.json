@@ -1,0 +1,23 @@
+{
+  "name": "motofotos",
+  "version": "1.0.0",
+  "description": "MotoFotos",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shanebell618/motofotos.git"
+  },
+  "author": "Shane Bell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shanebell618/motofotos/issues"
+  },
+  "homepage": "https://github.com/shanebell618/motofotos#readme",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.3"
+  }
+}
