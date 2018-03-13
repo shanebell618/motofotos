@@ -1,0 +1,8 @@
+<h1>This is the photos page</h1>
+
+<% photos.forEach(function(photo){ %>
+   <div>
+       <h4><%= photo.name %></h4>
+       <img src="<%= photo.image %>">
+   </div> 
+<% }) %>
