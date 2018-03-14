@@ -1,8 +1,36 @@
-<h1>This is the photos page</h1>
-
-<% photos.forEach(function(photo){ %>
-   <div>
-       <h4><%= photo.name %></h4>
-       <img src="<%= photo.image %>">
-   </div> 
-<% }) %>
+<% include partials/header %>
+   <div class="container">
+      
+      <header class="jumbotron">
+         <div class="container">
+            <h1>All Photos</h1>
+            <p>Show off <em>your</em> riding, at <em>your</em> local tracks!</p>
+            <p>
+               <a class="btn btn-primary btn-lg" href="/photos/new">Add Your Photo!</a>
+            </p>
+         </div>
+      </header>
+      
+      <a href="/photos/new">Add New Photo</a>
+      
+      <div class="row">
+         <div class="col-lg-12">
+            <h3>Recent Photos From Riders Everywhere!</h3>
+         </div>
+      </div>
+      
+      <div class="row flex-row text-center">
+         <% photos.forEach(function(photo){ %>
+            <div class="col-md-3 col-sm-6">
+               <div class="thumbnail">
+                   <img src="<%= photo.image %>">
+                   <div class="caption">
+                      <h4><%= photo.name %></h4>
+                   </div>
+               </div>
+            </div> 
+         <% }) %>
+      </div>
+      
+   </div>
+<% include partials/footer %>
