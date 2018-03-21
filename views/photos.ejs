@@ -1,6 +1,5 @@
 <% include partials/header %>
    <div class="container">
-      
       <header class="jumbotron">
          <div class="container">
             <h1>All Photos</h1>
@@ -18,19 +17,20 @@
             <h3>Recent Photos From Riders Everywhere!</h3>
          </div>
       </div>
-      
-      <div class="row flex-row text-center">
+    
+      <div class="row text-center">
          <% photos.forEach(function(photo){ %>
-            <div class="col-md-3 col-sm-6">
-               <div class="thumbnail">
-                   <img src="<%= photo.image %>">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+               <a href="#">
+               <div class="img-thumbnail">
+                   <img class="img-fluid" src="<%= photo.image %>">
                    <div class="caption">
                       <h4><%= photo.name %></h4>
                    </div>
                </div>
+               </a>
             </div> 
          <% }) %>
       </div>
-      
    </div>
 <% include partials/footer %>
