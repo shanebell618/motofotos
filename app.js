@@ -1,36 +1,19 @@
 var express    = require("express"),
     app        = express(),
     bodyParser = require("body-parser"),
-    mongoose   = require("mongoose");
+    mongoose   = require("mongoose"),
+    Photo      = require("./models/photo"),
+    seedDB     = require("./seeds");
+
 
 mongoose.connect("mongodb://localhost/motofotos");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 
-//SCHEMA SETUP
-var photoSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
+seedDB();
 
-var Photo = mongoose.model("Photo", photoSchema);
 
-// Photo.create(
-//     {
-//         name: "Andrew", 
-//         image: "http://via.placeholder.com/200x200",
-//         description: "This is a demo description"
-//     },
-//     function(err, photo){
-//         if(err){
-//             console.log(err);
-//         } else {
-//             console.log("photo added");
-//             console.log(photo);
-//         }
-//     });
 
 app.get("/", function(req, res){
     res.render("landing");
@@ -75,7 +58,7 @@ app.get("/photos/new", function(req, res) {
 //SHOW - shows more info about one photo
 app.get("/photos/:id", function(req, res) {
     //find the photo with provided ID
-    Photo.findById(req.params.id, function(err, foundPhoto){
+    Photo.findById(req.params.id).populate("comments").exec(function(err, foundPhoto){
         if(err) {
            console.log(err);
        } else {
