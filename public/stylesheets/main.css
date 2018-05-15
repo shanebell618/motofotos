@@ -32,7 +32,21 @@ body {
     margin: 25px auto;
 }
 
+.card {
+  margin-top: 20px;
+}
 
+.img-thumbnail {
+  padding: 0;
+}
+
+.img-thumbnail img {
+  width: 100%;
+}
+
+.img-thumbnail .caption-full {
+  padding: 9px;
+}
 
 
 

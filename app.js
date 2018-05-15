@@ -3,6 +3,7 @@ var express    = require("express"),
     bodyParser = require("body-parser"),
     mongoose   = require("mongoose"),
     Photo      = require("./models/photo"),
+    Comment    = require("./models/comment"),
     seedDB     = require("./seeds");
 
 
@@ -26,7 +27,7 @@ app.get("/photos", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.render("index", {photos: allPhotos});
+            res.render("photos/index", {photos: allPhotos});
         }
     });
 });
@@ -52,7 +53,7 @@ app.post("/photos", function(req, res){
 
 //NEW - show form to create new photo
 app.get("/photos/new", function(req, res) {
-   res.render("new");
+   res.render("photos/new");
 });
 
 //SHOW - shows more info about one photo
@@ -63,9 +64,44 @@ app.get("/photos/:id", function(req, res) {
            console.log(err);
        } else {
            //render show template with that photo
-           res.render("show", {photo: foundPhoto});
+           res.render("photos/show", {photo: foundPhoto});
        }
     });
+});
+
+//COMMENTS
+app.get("/photos/:id/comments/new", function(req, res) {
+    //find photo by id
+    Photo.findById(req.params.id, function(err, photo){
+        if(err){
+            console.log(err);
+        } else {
+            res.render("comments/new", {photo: photo});
+        }
+    })
+});
+
+app.post("/photos/:id/comments", function(req, res){
+   //lookup photo using id
+   Photo.findById(req.params.id, function(err, photo) {
+      if(err){
+          console.log(err);
+          res.redirect("/photos");
+      } else {
+          Comment.create(req.body.comment, function(err, comment){
+              if(err){
+                  console.log(err);
+              } else {
+                  photo.comments.push(comment);
+                  photo.save();
+                  res.redirect("/photos/" + photo._id);
+              }
+          });
+      }
+   });
+   //create new comment
+   //connect new comment to photo
+   //redirect to photo show page
 });
 
 
