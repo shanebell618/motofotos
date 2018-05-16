@@ -32,6 +32,11 @@ body {
     margin: 25px auto;
 }
 
+.register-form {
+    width: 30%;
+    margin: 25px auto;
+}
+
 .card {
   margin-top: 20px;
 }
