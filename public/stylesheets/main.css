@@ -22,6 +22,10 @@ body {
   top: -10px;
 }
 
+.container {
+  margin-bottom: 200px;
+}
+
 .flex-row {
     display: flex;
     flex-wrap: wrap;
