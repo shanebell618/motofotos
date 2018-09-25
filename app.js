@@ -4,6 +4,7 @@ var express       = require("express"),
     mongoose      = require("mongoose"),
     passport      = require("passport"),
     LocalStrategy = require("passport-local"),
+    methodOverride = require("method-override"),
     Photo         = require("./models/photo"),
     Comment       = require("./models/comment"),
     User          = require("./models/user"),
@@ -18,6 +19,7 @@ var commentRoutes = require("./routes/comments"),
 mongoose.connect("mongodb://localhost/motofotos");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
 app.set("view engine", "ejs");
 
 //seed the db

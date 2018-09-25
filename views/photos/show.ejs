@@ -16,6 +16,15 @@
                     <h4 class="float-right">$9</h4>
                     <h4><a href="#"><%= photo.name %></a></h4>
                     <p><%= photo.description %></p>
+                    <p><em>Submitted By: <%= photo.author.username %></em></p>
+                    
+                    <% if(currentUser && photo.author.id.equals(currentUser._id)){ %>
+                        <a class="btn btn-warning" href="/photos/<%= photo._id %>/edit">Edit</a>
+                        <form id="delete-form" action="/photos/<%= photo._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    <% } %>
+                    
                 </div>
             </div>
             <div class="card card-body bg-light">

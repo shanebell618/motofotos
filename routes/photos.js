@@ -16,12 +16,16 @@ router.get("/", function(req, res){
 });
 
 //CREATE - add new photo to db
-router.post("/", function(req, res){
+router.post("/", isLoggedIn, function(req, res){
     //get data from form and add to photos
     var name = req.body.name;
     var image = req.body.image;
     var desc = req.body.description;
-    var newPhoto = {name: name, image: image, description: desc};
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
+    var newPhoto = {name: name, image: image, description: desc, author: author};
    
     //create a new photo and save to db
     Photo.create(newPhoto, function(err, newlyCreated){
@@ -35,7 +39,7 @@ router.post("/", function(req, res){
 });
 
 //NEW - show form to create new photo
-router.get("/new", function(req, res) {
+router.get("/new", isLoggedIn, function(req, res) {
    res.render("photos/new");
 });
 
@@ -52,6 +56,41 @@ router.get("/:id", function(req, res) {
     });
 });
 
+//EDIT
+router.get("/:id/edit", checkPhotoOwnership, function(req, res) {
+    Photo.findById(req.params.id, function(err, foundPhoto){
+        if(err){
+            res.redirect("/photos");
+        } else {
+                res.render("photos/edit", {photo: foundPhoto});
+        }
+    });
+});
+
+//UPDATE
+router.put("/:id", checkPhotoOwnership, function(req, res){
+    //find and update correct photo
+    Photo.findByIdAndUpdate(req.params.id, req.body.photo, function(err, updatedPhoto){
+        if(err){
+            res.redirect("/photos");
+        } else {
+            //redirect to show page
+            res.redirect("/photos/" + req.params.id);
+        }
+    });
+});
+
+//DESTROY
+router.delete("/:id", checkPhotoOwnership, function(req, res){
+    Photo.findByIdAndRemove(req.params.id, function(err){
+        if(err){
+            res.redirect("/photos");
+        } else {
+            res.redirect("/photos");
+        }
+    })
+});
+
 //middleware
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
@@ -61,5 +100,25 @@ function isLoggedIn(req, res, next){
     }
 };
 
+function checkPhotoOwnership(req, res, next){
+        //is user logged in
+        if(req.isAuthenticated()){
+            Photo.findById(req.params.id, function(err, foundPhoto){
+                if(err){
+                    res.redirect("/photos");
+                } else {
+                    //does the user own the photo
+                    if(foundPhoto.author.id.equals(req.user._id)){
+                        next();
+                    } else {
+                        res.redirect("back");
+                    }
+                    
+                }
+            });
+        } else {
+            res.redirect("back");
+        }
+};
 
 module.exports = router;
