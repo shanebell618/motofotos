@@ -2,10 +2,11 @@ var express = require("express");
 var router = express.Router({mergeParams: true});
 var Photo = require("../models/photo");
 var Comment = require("../models/comment");
+var middleware = require("../middleware");
 
 
 //NEW - show form to create new comment
-router.get("/new", isLoggedIn, function(req, res) {
+router.get("/new", middleware.isLoggedIn, function(req, res) {
     //find photo by id
     Photo.findById(req.params.id, function(err, photo){
         if(err){
@@ -17,7 +18,7 @@ router.get("/new", isLoggedIn, function(req, res) {
 });
 
 //CREATE - add new comment to db
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, function(req, res){
    //lookup photo using id
    Photo.findById(req.params.id, function(err, photo) {
       if(err){
@@ -46,13 +47,43 @@ router.post("/", isLoggedIn, function(req, res){
    });
 });
 
-//middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    } else {
-        res.redirect("/login");
-    }
-};
+//EDIT - show edit comment form
+router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res){
+    Comment.findById(req.params.comment_id, function(err, foundComment) {
+        if(err){
+            res.redirect("back");
+        } else {
+            Photo.findById(req.params.id, function(err, foundPhoto){
+                if(err){
+                    res.redirect("back");
+                } else {
+                res.render("comments/edit", {comment: foundComment, photo: foundPhoto});
+                }
+            });    
+          }
+    });
+});
+
+//UPDATE - update comment in db
+router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res){
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
+        if(err){
+            res.redirect("back");
+        } else {
+            res.redirect("/photos/" + req.params.id);
+        }
+    })
+});
+
+//DESTROY - delete comment from db
+router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, res){
+    Comment.findByIdAndRemove(req.params.comment_id, function(err){
+        if(err){
+            res.redirect("back");
+        } else {
+            res.redirect("/photos/" + req.params.id);
+        }
+    })
+});
 
 module.exports = router;

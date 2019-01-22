@@ -1,0 +1,20 @@
+<% include ../partials/header %>
+<div class="container">
+   <div class="row mt-3">
+      <div class="col">
+      <h1 class="text-center">Edit Comment on <%= photo.name %></h1>
+      <div class="new-photo-form">
+         <form action="/photos/<%= photo._id %>/comments/<%= comment._id %>?_method=PUT" method="POST">
+            <div class="form-group">
+               <input class="form-control" type="text" name="comment[text]" value="<%= comment.text %>">
+            </div>
+            <div class="form-group">
+               <button class="btn btn-lg btn-primary btn-block">Update My Comment!</button>
+            </div>
+         </form>
+         <a href="/photos">Go Back</a>
+      </div>
+   </div>
+</div>
+</div>
+<% include ../partials/footer %>
