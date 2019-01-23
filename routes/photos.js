@@ -16,40 +16,44 @@ router.get("/", function(req, res){
     });
 });
 
+//NEW - show form to create new photo
+router.get("/new", middleware.isLoggedIn, function(req, res) {
+   res.render("photos/new");
+});
+
 //CREATE - add new photo to db
 router.post("/", middleware.isLoggedIn, function(req, res){
     //get data from form and add to photos
     var name = req.body.name;
+    var price = req.body.price;
     var image = req.body.image;
     var desc = req.body.description;
     var author = {
         id: req.user._id,
         username: req.user.username
     };
-    var newPhoto = {name: name, image: image, description: desc, author: author};
+    var newPhoto = {name: name, price: price, image: image, description: desc, author: author};
    
     //create a new photo and save to db
     Photo.create(newPhoto, function(err, newlyCreated){
        if(err) {
-           console.log(err);
+           req.flash("error", "Failed to create photo.");
+           res.redirect("/photos");
        } else {
            //redirect back to photos page
+           req.flash("success", "Photo added!");
            res.redirect("/photos");
        }
    }); 
-});
-
-//NEW - show form to create new photo
-router.get("/new", middleware.isLoggedIn, function(req, res) {
-   res.render("photos/new");
 });
 
 //SHOW - shows more info about one photo
 router.get("/:id", function(req, res) {
     //find the photo with provided ID
     Photo.findById(req.params.id).populate("comments").exec(function(err, foundPhoto){
-        if(err) {
-           console.log(err);
+        if(err || !foundPhoto) {
+           req.flash("error", "Photo not found.");
+           res.redirect("/photos");
        } else {
            //render show template with that photo
            res.render("photos/show", {photo: foundPhoto});
@@ -61,6 +65,7 @@ router.get("/:id", function(req, res) {
 router.get("/:id/edit", middleware.checkPhotoOwnership, function(req, res) {
     Photo.findById(req.params.id, function(err, foundPhoto){
         if(err){
+            req.flash("error", "Edit failed.");
             res.redirect("/photos");
         } else {
                 res.render("photos/edit", {photo: foundPhoto});
@@ -73,9 +78,11 @@ router.put("/:id", middleware.checkPhotoOwnership, function(req, res){
     //find and update correct photo
     Photo.findByIdAndUpdate(req.params.id, req.body.photo, function(err, updatedPhoto){
         if(err){
+            req.flash("error", "Update failed.");
             res.redirect("/photos");
         } else {
             //redirect to show page
+            req.flash("success", "Photo updated!");
             res.redirect("/photos/" + req.params.id);
         }
     });
@@ -85,8 +92,10 @@ router.put("/:id", middleware.checkPhotoOwnership, function(req, res){
 router.delete("/:id", middleware.checkPhotoOwnership, function(req, res){
     Photo.findByIdAndRemove(req.params.id, function(err){
         if(err){
+            req.flash("error", "Delete failed.");
             res.redirect("/photos");
         } else {
+            req.flash("success", "Photo deleted.");
             res.redirect("/photos");
         }
     })

@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 
 var photoSchema = new mongoose.Schema({
     name: String,
+    price: Number,
     image: String,
     description: String,
     author: {

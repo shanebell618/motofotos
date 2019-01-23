@@ -10,8 +10,6 @@ router.get("/", function(req, res){
 
 
 
-
-
 //AUTH ROUTES
 //show register form
 router.get("/register", function(req, res) {
@@ -23,10 +21,10 @@ router.post("/register", function(req, res) {
     var newUser = new User({username: req.body.username});
     User.register(newUser, req.body.password, function(err, user){
         if(err){
-            console.log(err);
-            return res.render("register");
+            return res.render("register", {"error": err.message});
         } else {
             passport.authenticate("local")(req, res, function(){
+                req.flash("success", "Welcome to MotoFotos, " + user.username + "!");
                 res.redirect("/photos");
             });
         }
@@ -35,14 +33,16 @@ router.post("/register", function(req, res) {
 
 //show login form
 router.get("/login", function(req, res) {
-   res.render("login"); 
+   res.render("login");
 });
 
 //handle login logic using middleware
 router.post("/login", passport.authenticate("local", 
     {
         successRedirect: "/photos",
-        failureRedirect: "/login"
+        successFlash: 'Welcome back!',
+        failureRedirect: "/login",
+        failureFlash: true
     }),
     function(req, res) {
 });
@@ -50,16 +50,10 @@ router.post("/login", passport.authenticate("local",
 //logout
 router.get("/logout", function(req, res) {
    req.logout();
+   req.flash("success", "You have been logged out.")
    res.redirect("/photos");
 });
 
-//middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    } else {
-        res.redirect("/login");
-    }
-};
+
 
 module.exports = router;

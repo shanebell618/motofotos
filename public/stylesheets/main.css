@@ -35,6 +35,10 @@ body {
     flex-wrap: wrap;
 }
 
+.container.message-bar {
+  margin-bottom: 20px;
+}
+
 .new-photo-form {
     width: 30%;
     margin: 25px auto;
