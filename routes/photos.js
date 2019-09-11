@@ -106,14 +106,14 @@ router.get("/:id/edit", middleware.checkPhotoOwnership, function(req, res) {
 
 //UPDATE
 router.put("/:id", middleware.checkPhotoOwnership, function (req, res) {
-	geocoder.geocode(req.body.location, function (err, data) {
-		if (err || !data.length) {
-			req.flash('error', 'Invalid address');
-			return res.redirect('back');
-		}
-		req.body.photo.lat = data[0].latitude;
-		req.body.photo.lng = data[0].longitude;
-		req.body.photo.location = data[0].formattedAddress;
+	// geocoder.geocode(req.body.location, function (err, data) {
+	// 	if (err || !data.length) {
+	// 		req.flash('error', 'Invalid address');
+	// 		return res.redirect('back');
+	// 	}
+		// req.body.photo.lat = data[0].latitude;
+		// req.body.photo.lng = data[0].longitude;
+		// req.body.photo.location = data[0].formattedAddress;
 
 		//find and update correct photo
 		Photo.findByIdAndUpdate(req.params.id, req.body.photo, function (err, updatedPhoto) {
@@ -126,7 +126,7 @@ router.put("/:id", middleware.checkPhotoOwnership, function (req, res) {
 				res.redirect("/photos/" + req.params.id);
 			}
 		});
-	});
+	//});
 });
 
 //DESTROY

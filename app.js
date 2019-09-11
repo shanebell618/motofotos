@@ -10,8 +10,8 @@ var express        = require("express"),
     methodOverride = require("method-override"),
     Photo          = require("./models/photo"),
     Comment        = require("./models/comment"),
-    User           = require("./models/user"),
-    seedDB         = require("./seeds");
+    User           = require("./models/user");
+    //seedDB         = require("./seeds");
 
 //requiring routes    
 var commentRoutes = require("./routes/comments"),
@@ -19,7 +19,7 @@ var commentRoutes = require("./routes/comments"),
     indexRoutes   = require("./routes/index");
 
 
-mongoose.connect("mongodb://localhost/motofotos");
+mongoose.connect("mongodb://localhost");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
