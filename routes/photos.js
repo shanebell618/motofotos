@@ -19,7 +19,8 @@ router.get("/", function(req, res){
     //get all photos from db
     Photo.find({}, function(err, allPhotos){
         if(err){
-            console.log(err);
+			req.flash('error', 'Error: ' . err);
+			return res.redirect('back');
         } else {
             res.render("photos/index", {photos: allPhotos});
         }
