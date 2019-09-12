@@ -41,7 +41,7 @@ router.post("/", middleware.isLoggedIn, function (req, res) {
 	var author = {
 		id: req.user._id,
 		username: req.user.username
-	}
+	};
 	geocoder.geocode(req.body.location, function (err, data) {
 		if (err || !data.length) {
 		    console.log(err);
@@ -127,7 +127,7 @@ router.put("/:id", middleware.checkPhotoOwnership, function (req, res) {
 				res.redirect("/photos/" + req.params.id);
 			}
 		});
-	//});
+	});
 });
 
 //DESTROY
@@ -140,7 +140,7 @@ router.delete("/:id", middleware.checkPhotoOwnership, function(req, res){
             req.flash("success", "Photo deleted.");
             res.redirect("/photos");
         }
-    })
+    });
 });
 
 module.exports = router;
